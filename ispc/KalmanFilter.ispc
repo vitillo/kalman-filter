@@ -271,7 +271,7 @@ inline void kalman_filter(uniform KalmanFilter * uniform filter, uniform KalmanF
 
       M2(Dim2_V, 0, 0, i) = param->hits[h].err_locX[i]*param->hits[h].err_locX[i];
       M2(Dim2_V, 0, 1, i) = param->hits[h].cov_locXY[i];
-      M2(Dim2_V, 1, 0, i) = param->hits[h].cov_locXY[h];
+      M2(Dim2_V, 1, 0, i) = param->hits[h].cov_locXY[i];
       M2(Dim2_V, 1, 1, i) = param->hits[h].err_locY[i]*param->hits[h].err_locY[i];
 
       correctGain2D(filter, i);
