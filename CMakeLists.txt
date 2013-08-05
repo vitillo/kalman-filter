@@ -28,13 +28,13 @@ add_definitions(-DALIGNMENT=${alignment} -DHAS_MATERIAL_EFFECTS=0 ${use_double})
 ispc_compile(${CMAKE_SOURCE_DIR}/ispc/KalmanFilter.ispc "--target=avx-x2 ${use_double}" KalmanFilterISPC)
 message(STATUS ${KalmanFilterISPC})
 
-add_executable(unit_tests src/unit_tests.cpp src/serial/KalmanFilterSerial.cpp include/KalmanFilter.ispc.h)
+add_executable(unit_tests src/unit_tests.cpp src/serial/KalmanFilterSerial.cpp include/ispc/KalmanFilter.ispc.h)
 target_link_libraries(unit_tests ${GSL_LIBRARIES} ${ROOT_LIBRARIES} ${KalmanFilterISPC})
 
-add_executable(kalman_benchmark src/kalman_benchmark.cpp src/serial/KalmanFilterSerial.cpp include/KalmanFilter.ispc.h)
+add_executable(kalman_benchmark src/kalman_benchmark.cpp src/serial/KalmanFilterSerial.cpp include/ispc/KalmanFilter.ispc.h)
 target_link_libraries(kalman_benchmark ${GSL_LIBRARIES} ${ROOT_LIBRARIES} RootIoWrapper ${KalmanFilterISPC})
 
-add_executable(synthetic_benchmark src/synthetic_benchmark.cpp src/serial/gemm.cpp src/serial/KalmanFilterSerial.cpp include/KalmanFilter.ispc.h)
+add_executable(synthetic_benchmark src/synthetic_benchmark.cpp src/serial/gemm.cpp src/serial/KalmanFilterSerial.cpp include/ispc/KalmanFilter.ispc.h)
 target_link_libraries(synthetic_benchmark ${GSL_LIBRARIES} ${ROOT_LIBRARIES} RootIoWrapper ${KalmanFilterISPC})
 
 add_subdirectory(src/ROOT_Ttree_io)

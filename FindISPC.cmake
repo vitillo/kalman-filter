@@ -13,7 +13,7 @@ set(ISPC_FLAGS_RELEASE "-O2 -DNDEBUG" CACHE STRING "ISPC release compile flags")
 function(ispc_compile filename flags obj)
   get_filename_component(base ${filename} NAME_WE)
   set(base_abs ${CMAKE_CURRENT_BINARY_DIR}/${base})
-  set(base_include_abs ${CMAKE_CURRENT_BINARY_DIR}/include/${base})
+  set(base_include_abs ${CMAKE_CURRENT_BINARY_DIR}/include/ispc/${base})
 
   set(output1 ${base_abs}.o)
   set(output2 ${base_include_abs}.ispc.h)
