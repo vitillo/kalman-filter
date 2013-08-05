@@ -26,7 +26,6 @@ add_definitions(-DALIGNMENT=${alignment} -DHAS_MATERIAL_EFFECTS=0 ${use_double})
 #ispc_compile(${CMAKE_SOURCE_DIR}/ispc/KalmanFilter.ispc "--target=avx-x2 ${use_double} --opt=force-aligned-memory --force-alignment=${alignment}" KalmanFilterISPC)
 
 ispc_compile(${CMAKE_SOURCE_DIR}/ispc/KalmanFilter.ispc "--target=avx-x2 ${use_double}" KalmanFilterISPC)
-message(STATUS ${KalmanFilterISPC})
 
 add_executable(unit_tests src/unit_tests.cpp src/serial/KalmanFilterSerial.cpp include/ispc/KalmanFilter.ispc.h)
 target_link_libraries(unit_tests ${GSL_LIBRARIES} ${ROOT_LIBRARIES} ${KalmanFilterISPC})
