@@ -16,7 +16,7 @@ include_directories(include ${ROOT_INCLUDE_DIR} ${GSL_INCLUDE_DIR})
 link_directories(${ROOT_LIBRARY_DIR} ${GSL_LINK_DIRECTORIES} /home/vitillo/Dropbox/ispc_test/lib)
 
 if(NOT DEFINED USE_DOUBLE)
-  set(use_double -DUSE_DOUBLE=0)
+  set(use_double -DUSE_DOUBLE=1)
 else()
   set(use_double -DUSE_DOUBLE=${USE_DOUBLE})
 endif()
