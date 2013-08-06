@@ -157,10 +157,68 @@ void benchmarkPreload(){
     ispc::startFilter(&filter, &eventParams[i]);
   }
   tp = stop_clock();
-  ispc::KalmanFilter_deallocate(&filter);
-
   cout << "ISPC speedup over serial (with preload): " << t1/tp << endl;
 
+  ispc::KalmanFilter_deallocate(&filter);
+  for(int i = 0; i < eventParams.size(); i++)
+    ispc::KalmanFilterParameter_deallocate(&eventParams[i]);
+}
+
+// Validation... ugly! Just temporary anyway.
+void validate(){
+  int eventCount = eventReader.getEventCount();
+  vector<vector<Track_t> > tracksPerEvent;
+  vector<ispc::KalmanFilterParameter> eventParams;
+
+  for(int i = 0; i < eventCount; i++){
+    KF_Event_t event = eventReader.getEvent(i);
+    int trackCounts = event.size();
+    vector<Track_t> tracks;
+
+    for(int j = 0; j < trackCounts; j++){
+      Track_t track = eventReader.getTrack(i, j);
+
+      if(track.track.empty())
+	continue;
+
+      tracks.push_back(track);
+    }
+
+    sort(tracks.begin(), tracks.end(), [](const Track_t &a, const Track_t &b){return a.track.size() > b.track.size();});
+
+    ispc::KalmanFilterParameter param;
+    KalmanFilterParameter_initialize(&param, tracks, 20);
+
+    eventParams.push_back(param);
+    tracksPerEvent.push_back(tracks);
+  }
+
+  double eps = 0.00001;
+  ispc::KalmanFilter filter;
+  KalmanFilter_initialize(&filter, 200);
+
+  for(int i = 0; i < eventCount; i++){
+    vector<Track_t> &tracks = tracksPerEvent[i];
+    int trackSize = tracks.size();
+
+    ispc::KalmanFilter_reinitialize(&filter, trackSize);
+    ispc::startFilter(&filter, &eventParams[i]);
+
+    KalmanFilterSerial kalmanFilter;
+    for(int j = 0; j < trackSize; j++){
+      kalmanFilter.setTrackData(tracks[j]);
+      kalmanFilter.startFilter();
+
+      for(int k = 0; k < 5; k++){                                      
+	assert(abs(GSL_VECTOR_GET(kalmanFilter.mP_k1, k) - filter.P_k1[k*tracks.size() + j]) < eps);
+	for(int l = 0; l < 5; l++){
+	  assert(abs(GSL_MATRIX_GET(kalmanFilter.mC_k1, k, l) - filter.C_k1[k*5*tracks.size() + l*tracks.size() + j]) < eps);
+	}
+      }
+    }
+  }
+
+  ispc::KalmanFilter_deallocate(&filter);
   for(int i = 0; i < eventParams.size(); i++)
     ispc::KalmanFilterParameter_deallocate(&eventParams[i]);
 }
@@ -212,9 +270,9 @@ int main (int argc, char *argv[]){
   }
 
   runSerial(); //warmup
-
   benchmarkPreload();
   benchmark();
+  validate();
 
   eventWriter.closeFile();
   return 0;

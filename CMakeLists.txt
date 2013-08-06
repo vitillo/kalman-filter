@@ -42,3 +42,4 @@ enable_testing()
 
 add_test(unit_tests ./unit_tests)
 add_test(synthetic_benchmark ./synthetic_benchmark)
+add_test(kalman_benchmark ./kalman_benchmark)

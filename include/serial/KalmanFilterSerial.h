@@ -62,6 +62,7 @@ class KalmanFilterSerial {
 
     GSL_MATRIX * mInverse;
 
+    friend void validate();
     friend void testKalmanFilterNTracksMHitsMixed(int ntracks, int hits);
 };
 

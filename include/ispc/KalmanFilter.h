@@ -248,7 +248,22 @@ inline void KalmanFilter_reinitialize(KalmanFilter *filter, int ntracks){
     KalmanFilter_deallocate(filter);
     KalmanFilter_initialize(filter, ntracks);
   }else{
+    memset(filter->C_k1, 0, sizeof(scalar_t)*ntracks*5*5);
+    memset(filter->C_k, 0, sizeof(scalar_t)*ntracks*5*5);
+    memset(filter->Dim1_H, 0, sizeof(scalar_t)*ntracks*5);
+    memset(filter->Dim2_H, 0, sizeof(scalar_t)*ntracks*5*2);
+    memset(filter->Dim1_K, 0, sizeof(scalar_t)*ntracks*5);
+    memset(filter->Dim2_K, 0, sizeof(scalar_t)*ntracks*5*2);
+    memset(filter->Dim5_K, 0, sizeof(scalar_t)*ntracks*5*5);
+    memset(filter->Dim1_V, 0, sizeof(scalar_t)*ntracks);
+    memset(filter->Dim2_V, 0, sizeof(scalar_t)*ntracks*4);
+    memset(filter->Dim1_m, 0, sizeof(scalar_t)*ntracks);
+    memset(filter->Dim2_m, 0, sizeof(scalar_t)*ntracks*2);
+    memset(filter->P_k1, 0, sizeof(scalar_t)*ntracks*5);
+    memset(filter->P_k, 0, sizeof(scalar_t)*ntracks*5);
+
     filter->ntracks = ntracks;
+    filter->max_track_storage = ntracks;
   }
 }
 
