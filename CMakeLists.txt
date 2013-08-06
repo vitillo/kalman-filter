@@ -1,5 +1,5 @@
 cmake_minimum_required ( VERSION 2.6 )
-project (raytracer)
+project (kalman-filter)
 
 include(FindROOT.cmake)
 include(FindISPC.cmake)
